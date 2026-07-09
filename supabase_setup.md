@@ -300,3 +300,4 @@ In your GitHub repo settings (**Settings → Secrets and variables → Actions**
 - `VITE_SUPABASE_ANON_KEY` — your Supabase anon/public key
 
 These are injected at build time by the GitHub Actions workflow.
+- setup github secrets and variables also
