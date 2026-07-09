@@ -281,7 +281,7 @@ create policy "Faculty can update records in own sessions"
    - Alternatively, the trigger function can be modified to reject non-matching domains.
 
 ---
-
+--
 ## 5. Set the Site URL
 
 1. Go to **Authentication → URL Configuration**.
