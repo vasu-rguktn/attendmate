@@ -8,11 +8,14 @@ export function useStudents(sectionId) {
       const { data, error } = await supabase
         .from('students')
         .select('id, roll_number, student_id, full_name')
-        .eq('section_id', sectionId)
-        .order('roll_number', { ascending: true });
+        .eq('section_id', sectionId);
 
       if (error) throw error;
-      return data || [];
+      
+      // Sort roll_number numerically (natural sort)
+      return (data || []).sort((a, b) =>
+        (a.roll_number || '').localeCompare(b.roll_number || '', undefined, { numeric: true, sensitivity: 'base' })
+      );
     },
     enabled: !!sectionId,
   });

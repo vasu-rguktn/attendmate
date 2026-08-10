@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import { useStudents } from '../hooks/useStudents';
 import { useFacultyAssignments } from '../hooks/useFacultyAssignments';
 import { read, utils } from 'xlsx';
 import {
@@ -38,19 +39,7 @@ export default function RosterUpload() {
   });
 
   // Get existing students for this section
-  const { data: existingStudents } = useQuery({
-    queryKey: ['students', sectionId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('students')
-        .select('id, roll_number, student_id, full_name')
-        .eq('section_id', sectionId)
-        .order('roll_number', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!sectionId,
-  });
+  const { data: existingStudents } = useStudents(sectionId);
 
   function handleFileSelect(e) {
     const file = e.target.files?.[0];
