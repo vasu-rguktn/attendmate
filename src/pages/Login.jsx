@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 
 export default function Login() {
-  const { user, isOnboarded, loading, signInWithGoogle } = useAuth();
+  const { user, isOnboarded, loading, signInWithGoogle, signInDemo } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,8 +69,7 @@ export default function Login() {
             AttendMate
           </h1>
           <p className="text-center text-sm" style={{ color: 'var(--color-text-secondary)', maxWidth: '20rem' }}>
-            Smart attendance tracking for college faculty.
-            Tap. Track. Export.
+            Smart attendance & role-play marks tracking for college faculty.
           </p>
         </div>
 
@@ -80,7 +79,7 @@ export default function Login() {
             Welcome back
           </h2>
           <p className="text-sm text-center mb-6" style={{ color: 'var(--color-text-secondary)' }}>
-            Sign in with your college Google account to continue
+            Sign in with your Google account or explore in demo mode
           </p>
 
           <button
@@ -108,6 +107,19 @@ export default function Login() {
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
             </svg>
             Continue with Google
+          </button>
+
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-slate-700/60" />
+            <span className="px-3 text-xs text-slate-500 font-medium">OR</span>
+            <div className="flex-1 border-t border-slate-700/60" />
+          </div>
+
+          <button
+            onClick={signInDemo}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-xs transition-all btn-secondary cursor-pointer"
+          >
+            <span>Explore Demo Mode (Instant Faculty Access)</span>
           </button>
         </div>
 

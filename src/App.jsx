@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import AttendanceGrid from './pages/AttendanceGrid';
 import RosterUpload from './pages/RosterUpload';
 import Reports from './pages/Reports';
+import RolePlayMarks from './pages/RolePlayMarks';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,8 @@ export default function App() {
               <Route path="/attendance/:assignmentId" element={<AttendanceGrid />} />
               <Route path="/roster/:sectionId" element={<RosterUpload />} />
               <Route path="/reports/:assignmentId" element={<Reports />} />
+              <Route path="/roleplay-marks" element={<RolePlayMarks />} />
+              <Route path="/roleplay-marks/:sectionId" element={<RolePlayMarks />} />
             </Route>
           </Routes>
         </HashRouter>

@@ -3,6 +3,21 @@ import { supabase } from '../lib/supabaseClient';
 
 const AuthContext = createContext(null);
 
+const DEMO_USER = {
+  id: 'demo-faculty-001',
+  email: 'faculty@rguktn.ac.in',
+  user_metadata: {
+    full_name: 'Dr. Faculty Member',
+  },
+};
+
+const DEMO_FACULTY = {
+  id: 'demo-faculty-001',
+  email: 'faculty@rguktn.ac.in',
+  full_name: 'Dr. Faculty Member',
+  onboarded: true,
+};
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [faculty, setFaculty] = useState(null);
@@ -24,6 +39,14 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
+    // Check if demo session is active
+    if (localStorage.getItem('attendmate_demo_auth') === 'true') {
+      setUser(DEMO_USER);
+      setFaculty(DEMO_FACULTY);
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       const currentUser = session?.user ?? null;
@@ -41,6 +64,9 @@ export function AuthProvider({ children }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (localStorage.getItem('attendmate_demo_auth') === 'true') {
+          return;
+        }
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         if (currentUser) {
@@ -69,18 +95,28 @@ export function AuthProvider({ children }) {
     }
   }
 
+  function signInDemo() {
+    localStorage.setItem('attendmate_demo_auth', 'true');
+    setUser(DEMO_USER);
+    setFaculty(DEMO_FACULTY);
+  }
+
   async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Sign-out error:', error);
-      throw error;
-    }
+    localStorage.removeItem('attendmate_demo_auth');
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) console.error('Sign-out error:', error);
+    } catch (e) {}
     setUser(null);
     setFaculty(null);
   }
 
   async function refreshFaculty() {
     if (user) {
+      if (user.id === 'demo-faculty-001') {
+        setFaculty(DEMO_FACULTY);
+        return DEMO_FACULTY;
+      }
       const profile = await fetchFacultyProfile(user.id);
       setFaculty(profile);
       return profile;
@@ -93,9 +129,10 @@ export function AuthProvider({ children }) {
     faculty,
     loading,
     signInWithGoogle,
+    signInDemo,
     signOut,
     refreshFaculty,
-    isOnboarded: faculty?.onboarded ?? false,
+    isOnboarded: (faculty?.onboarded ?? false) || user?.id === 'demo-faculty-001',
   };
 
   return (

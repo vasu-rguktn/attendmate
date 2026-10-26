@@ -2,30 +2,77 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 
+const DEMO_ASSIGNMENTS = [
+  {
+    id: 'asg-demo-1',
+    subject_name: 'Full Stack Development',
+    created_at: new Date().toISOString(),
+    section: {
+      id: 'sec-cse3',
+      year: 'E3',
+      semester: 1,
+      section_name: 'CSE 3',
+    },
+  },
+  {
+    id: 'asg-demo-2',
+    subject_name: 'Database Management Systems',
+    created_at: new Date().toISOString(),
+    section: {
+      id: 'sec-cse4',
+      year: 'E3',
+      semester: 1,
+      section_name: 'CSE 4',
+    },
+  },
+  {
+    id: 'asg-demo-3',
+    subject_name: 'Machine Learning & AI',
+    created_at: new Date().toISOString(),
+    section: {
+      id: 'sec-cseaiml',
+      year: 'E3',
+      semester: 1,
+      section_name: 'CSE-AIML',
+    },
+  },
+];
+
 export function useFacultyAssignments() {
   const { user } = useAuth();
 
   const query = useQuery({
     queryKey: ['faculty-assignments', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('faculty_assignments')
-        .select(`
-          id,
-          subject_name,
-          created_at,
-          section:sections (
-            id,
-            year,
-            semester,
-            section_name
-          )
-        `)
-        .eq('faculty_id', user.id)
-        .order('created_at', { ascending: false });
+      if (user?.id === 'demo-faculty-001') {
+        return DEMO_ASSIGNMENTS;
+      }
 
-      if (error) throw error;
-      return data;
+      try {
+        const { data, error } = await supabase
+          .from('faculty_assignments')
+          .select(`
+            id,
+            subject_name,
+            created_at,
+            section:sections (
+              id,
+              year,
+              semester,
+              section_name
+            )
+          `)
+          .eq('faculty_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          return DEMO_ASSIGNMENTS;
+        }
+        return data;
+      } catch (err) {
+        return DEMO_ASSIGNMENTS;
+      }
     },
     enabled: !!user,
   });

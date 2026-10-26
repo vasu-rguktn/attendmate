@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, ClipboardList, Upload, Trash2, CheckCircle2, Clock } from 'lucide-react';
+import { BookOpen, ClipboardList, Upload, Trash2, CheckCircle2, Clock, Award } from 'lucide-react';
 import { YEAR_LABELS } from '../lib/constants';
 
 export default function ClassCard({ assignment, isTodayDone, onDelete }) {
@@ -41,6 +41,14 @@ export default function ClassCard({ assignment, isTodayDone, onDelete }) {
         >
           <ClipboardList className="w-4 h-4" />
           <span className="truncate">Take Attendance</span>
+        </button>
+        <button
+          onClick={() => navigate(`/roleplay-marks/${section.id}`)}
+          className="btn-secondary text-sm py-2.5 px-3"
+          title="Role-Play Marks"
+          style={{ color: 'var(--color-accent-start)' }}
+        >
+          <Award className="w-4 h-4" />
         </button>
         <button
           onClick={() => navigate(`/reports/${assignment.id}`)}

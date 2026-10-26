@@ -297,9 +297,44 @@ create policy "Faculty can update records in own sessions"
 In your GitHub repo settings (**Settings → Secrets and variables → Actions**), add:
 
 - `VITE_SUPABASE_URL` — your Supabase project URL
+- `VITE_SUPABASE_URL` — your Supabase project URL
 - `VITE_SUPABASE_ANON_KEY` — your Supabase anon/public key
 
 These are injected at build time by the GitHub Actions workflow.
-- setup github secrets and variables also
 
--- Heloooo DBs
+---
+
+## 7. Role-Play Marks Table (Optional for Database Sync)
+
+To enable persistent database synchronization across multiple devices for Role-Play evaluation marks:
+
+```sql
+create table if not exists roleplay_marks (
+  id uuid primary key default gen_random_uuid(),
+  faculty_id uuid references faculty(id) on delete cascade,
+  section_id uuid references sections(id) on delete cascade,
+  student_id uuid references students(id) on delete cascade,
+  roll_number text not null,
+  activity_title text not null,
+  marks_obtained numeric(5,2),
+  max_marks numeric(5,2) default 20,
+  remarks text default '',
+  evaluation_date date default current_date,
+  created_at timestamptz default now(),
+  unique (section_id, student_id, activity_title)
+);
+
+alter table roleplay_marks enable row level security;
+
+create policy "Faculty can view own roleplay marks"
+  on roleplay_marks for select
+  using (faculty_id = auth.uid());
+
+create policy "Faculty can insert or update own roleplay marks"
+  on roleplay_marks for insert
+  with check (faculty_id = auth.uid());
+
+create policy "Faculty can update own roleplay marks"
+  on roleplay_marks for update
+  using (faculty_id = auth.uid());
+```

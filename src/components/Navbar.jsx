@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, LayoutDashboard, LogOut, GraduationCap } from 'lucide-react';
+import { Menu, X, LayoutDashboard, LogOut, GraduationCap, Award } from 'lucide-react';
 
 export default function Navbar() {
   const { user, faculty, signOut } = useAuth();
@@ -33,7 +33,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2">
             <Link
               to="/dashboard"
               className="flex items-center gap-1.5 text-sm no-underline px-3 py-1.5 rounded-lg transition-colors"
@@ -43,6 +43,17 @@ export default function Navbar() {
             >
               <LayoutDashboard className="w-4 h-4" />
               Dashboard
+            </Link>
+
+            <Link
+              to="/roleplay-marks"
+              className="flex items-center gap-1.5 text-sm no-underline px-3 py-1.5 rounded-lg transition-colors"
+              style={{ color: 'var(--color-text-secondary)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-text-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
+            >
+              <Award className="w-4 h-4 text-indigo-400" />
+              Role-Play Marks
             </Link>
 
             <div className="flex items-center gap-3 ml-2 pl-4" style={{ borderLeft: '1px solid var(--color-border-default)' }}>
@@ -109,6 +120,15 @@ export default function Navbar() {
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
+              </Link>
+              <Link
+                to="/roleplay-marks"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm no-underline"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                <Award className="w-4 h-4 text-indigo-400" />
+                Role-Play Marks
               </Link>
               <button
                 onClick={() => { handleSignOut(); setMobileOpen(false); }}

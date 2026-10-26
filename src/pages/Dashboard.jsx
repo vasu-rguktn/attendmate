@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFacultyAssignments, useAddAssignment, useDeleteAssignment, useTodayStatus } from '../hooks/useFacultyAssignments';
 import ClassCard from '../components/ClassCard';
 import AssignmentPicker from '../components/AssignmentPicker';
-import { Plus, X, BookOpen } from 'lucide-react';
+import { Plus, X, BookOpen, Award } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { data: assignments, isLoading, error } = useFacultyAssignments();
   const { data: todayStatus } = useTodayStatus(assignments);
   const addAssignment = useAddAssignment();
@@ -67,13 +69,23 @@ export default function Dashboard() {
             {assignments?.length || 0} class{(assignments?.length || 0) !== 1 ? 'es' : ''} assigned
           </p>
         </div>
-        <button
-          onClick={() => setShowPicker(!showPicker)}
-          className={showPicker ? 'btn-secondary' : 'btn-primary'}
-        >
-          {showPicker ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          <span className="hidden sm:inline">{showPicker ? 'Close' : 'Add Class'}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate('/roleplay-marks')}
+            className="btn-secondary text-sm py-2.5 px-3.5 flex items-center gap-1.5"
+            title="Evaluate Role-Play Marks"
+          >
+            <Award className="w-4 h-4 text-indigo-400" />
+            <span className="hidden sm:inline">Role-Play Marks</span>
+          </button>
+          <button
+            onClick={() => setShowPicker(!showPicker)}
+            className={showPicker ? 'btn-secondary' : 'btn-primary'}
+          >
+            {showPicker ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            <span className="hidden sm:inline">{showPicker ? 'Close' : 'Add Class'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Add class picker (expandable) */}
